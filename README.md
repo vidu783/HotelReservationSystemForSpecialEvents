@@ -56,5 +56,4 @@ And I implemented the core functionalities of the hotel manager, including:
   - Ensured smooth management of hotel operations through system functionalities
 
 
-3. Deploy using Apache Tomcat  
-4. Run via browser:  
+
