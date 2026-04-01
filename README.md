@@ -48,13 +48,13 @@ Hotel staff can manage bookings efficiently through a centralized dashboard.
 ---
 ## Contribution
 I contributed to the **Hotel Manager** role in the system.
-I implemented the core functionalities of the hotel manager, including:
+And I implemented the core functionalities of the hotel manager, including:
   - Managing room reservations
   - Checking availability
   - Handling booking approvals and coordination
   - Overseeing reservation and booking processes
   - Ensured smooth management of hotel operations through system functionalities
 
-2. Open in IntelliJ IDEA  
+
 3. Deploy using Apache Tomcat  
 4. Run via browser:  
