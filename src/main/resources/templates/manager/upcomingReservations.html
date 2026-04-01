@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Reservations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/manager/dashboard"><i class="fas fa-hotel me-2"></i>Hotel Manager</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/manager/dashboard"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+            <a class="nav-link active" href="/manager/reservations/upcoming"><i class="fas fa-calendar-alt me-1"></i>Upcoming</a>
+            <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+        </div>
+    </div>
+    
+</nav>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="fas fa-calendar-alt me-2"></i>Upcoming Reservations</h2>
+        <a href="/manager/dashboard" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to Dashboard</a>
+    </div>
+
+    <div th:if="${reservations == null or #lists.isEmpty(reservations)}" class="text-center text-muted py-5">
+        <i class="fas fa-calendar-times fa-3x mb-3"></i>
+        <p>No upcoming reservations</p>
+    </div>
+
+    <div class="table-responsive" th:if="${reservations != null and !#lists.isEmpty(reservations)}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Guest</th>
+                <th>Date</th>
+                <th>Hall</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${reservations}">
+                <td th:text="${r.bookingId}">1</td>
+                <td th:text="${r.guest != null ? r.guest.firstName + ' ' + r.guest.lastName : 'Guest'}">Guest</td>
+                <td th:text="${#temporals.format(r.bookingDate, 'yyyy-MM-dd HH:mm')}">2025-01-01 12:00</td>
+                <td th:text="${r.hall != null ? r.hall.name : 'N/A'}">Hall</td>
+                <td th:text="${r.status}">Confirmed</td>
+                <td>
+                    <a th:href="@{'/manager/bookings/' + ${r.bookingId}}" class="btn btn-sm btn-outline-info">
+                        <i class="fas fa-eye me-1"></i>View
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+

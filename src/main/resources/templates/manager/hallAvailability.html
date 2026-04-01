@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hall Availability</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .badge-status {
+            font-size: 0.9rem;
+            padding: 0.5em 0.75em;
+            border-radius: 0.5rem;
+        }
+        .card-title {
+            font-weight: 600;
+        }
+        ul.list-group-item {
+            border: none;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .booking-info small {
+            display: block;
+            margin-top: 5px;
+        }
+        .btn-dashboard {
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 25px;
+            background: #6a11cb;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn-dashboard:hover {
+            background: #2575fc;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Hall Availability</h2>
+
+    <div class="row">
+        <div th:each="entry : ${hallAvailability}" class="col-md-6 mb-4">
+            <div class="card p-3">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="card-title" th:text="${entry.value.hall.name}">Hall Name</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Capacity:</strong> <span th:text="${entry.value.hall.capacity}">0</span> guests<br>
+                        <strong>Status:</strong>
+                        <span th:if="${entry.value.isAvailable}" class="badge badge-status bg-success">Available</span>
+                        <span th:unless="${entry.value.isAvailable}" class="badge badge-status bg-danger">Occupied</span>
+                    </p>
+
+                    <h6>Bookings:</h6>
+                    <ul class="list-group list-group-flush" th:if="${entry.value.bookings != null and !#lists.isEmpty(entry.value.bookings)}">
+                        <li th:each="b : ${entry.value.bookings}" class="list-group-item booking-info">
+                            <strong th:text="${b.guest.firstName + ' ' + b.guest.lastName}">Guest Name</strong>
+                            <small class="text-muted">
+                                Date: <span th:text="${#temporals.format(b.bookingDate, 'yyyy-MM-dd HH:mm')}">Date</span><br>
+                                Guests: <span th:text="${b.numOfGuests}">0</span><br>
+                                Status: <span th:text="${b.status}">Status</span>
+                            </small>
+                        </li>
+                    </ul>
+                    <p th:if="${entry.value.bookings == null or #lists.isEmpty(entry.value.bookings)}" class="text-muted">No bookings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/manager/dashboard" class="btn-dashboard">Back to Dashboard</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Details</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .alt { margin-top: 25px; }
+    .info { margin-top: 15px; padding: 10px; background: #f9f9f9; border: 1px solid #ccc; }
+    .actions { margin-top: 20px; }
+    .actions form { display: inline-block; margin-right: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>Booking Details</h2>
+
+<!-- Debugging line -->
+<p th:text="'Pending bookings count: ' + ${pendingBookings != null ? pendingBookings.size() : 0}"></p>
+
+<!-- Upcoming reservations -->
+<div class="info" th:if="${upcomingReservations != null}">
+  <h3>Upcoming Reservations</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Guest</th>
+      <th>Hall</th>
+      <th>Event</th>
+      <th>Guests</th>
+      <th>Date</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="u : ${upcomingReservations}">
+      <td th:text="${u.bookingId}"></td>
+      <td th:text="${u.guest != null ? u.guest.firstName + ' ' + u.guest.lastName : 'N/A'}"></td>
+      <td th:text="${u.hall != null ? u.hall.name : 'N/A'}"></td>
+      <td th:text="${u.event != null ? u.event.eventName : 'N/A'}"></td>
+      <td th:text="${u.numOfGuests}"></td>
+      <td th:text="${#temporals.format(u.bookingDate, 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${u.status}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Show table of all pending bookings -->
+<div th:if="${pendingBookings != null and !pendingBookings.isEmpty()}">
+  <h3>Pending Bookings</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Guest</th>
+      <th>Hall</th>
+      <th>Event</th>
+      <th>Guests</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="booking : ${pendingBookings}">
+      <td th:text="${booking.bookingId}"></td>
+      <td th:text="${booking.guest != null ? booking.guest.firstName + ' ' + booking.guest.lastName : 'N/A'}"></td>
+      <td th:text="${booking.hall != null ? booking.hall.name : 'N/A'}"></td>
+      <td th:text="${booking.event != null ? booking.event.eventName : 'N/A'}"></td>
+      <td th:text="${booking.numOfGuests}"></td>
+      <td th:text="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${booking.status}"></td>
+      <td><a th:href="@{'/manager/bookings/' + ${booking.bookingId}}">View</a></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div th:if="${pendingBookings == null or pendingBookings.isEmpty()}">
+  <p>No pending bookings found.</p>
+</div>
+
+<!-- If one booking is selected, show details -->
+<div th:if="${booking != null}" class="info">
+  <h3>Booking #<span th:text="${booking.bookingId}"></span> Details</h3>
+  <p><strong>Guest:</strong> <span th:text="${booking.guest != null ? booking.guest.firstName + ' ' + booking.guest.lastName : 'N/A'}"></span></p>
+  <p><strong>Hall:</strong> <span th:text="${booking.hall != null ? booking.hall.name : 'N/A'}"></span></p>
+  <p><strong>Guests:</strong> <span th:text="${booking.numOfGuests}"></span></p>
+  <p><strong>Date:</strong> <span th:text="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+  <p><strong>Status:</strong> <span th:text="${booking.status}"></span></p>
+
+  <!-- Alternative Halls -->
+  <div class="alt" th:if="${alternatives != null}">
+    <h4>Alternative Halls</h4>
+    <ul>
+      <li th:each="h : ${alternatives}" th:text="${h.name + ' (Capacity: ' + h.capacity + ')'}"></li>
+    </ul>
+  </div>
+
+  <!-- Assign Staff -->
+  <div class="alt" th:if="${coordinators != null}">
+    <h4>Assign Staff</h4>
+    <form th:action="@{'/manager/bookings/' + ${booking.bookingId} + '/assign-staff'}" method="post">
+      <select name="staffId">
+        <option th:each="c : ${coordinators}"
+                th:value="${c.userId}"
+                th:text="${c.name + ' - ' + c.role}"></option>
+      </select>
+      <input type="text" name="roleDescription" placeholder="Role description"/>
+      <button type="submit">Assign</button>
+    </form>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <form th:action="@{'/manager/bookings/' + ${booking.bookingId} + '/approve'}" method="post">
+      <input type="hidden" name="managerId" value="1"/>
+      <button type="submit">Approve</button>
+    </form>
+
+    <form th:action="@{'/manager/bookings/' + ${booking.bookingId} + '/reject'}" method="post">
+      <input type="text" name="reason" placeholder="Reason"/>
+      <input type="hidden" name="managerId" value="1"/>
+      <button type="submit">Reject</button>
+    </form>
+
+    <form th:action="@{'/manager/bookings/' + ${booking.bookingId} + '/request-info'}" method="post">
+      <input type="text" name="note" placeholder="Request info"/>
+      <input type="hidden" name="managerId" value="1"/>
+      <button type="submit">Request Info</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

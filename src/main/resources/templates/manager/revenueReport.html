@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Revenue Report</title>
+</head>
+<body>
+<h2>Revenue Report</h2>
+
+<p>Total revenue: <strong th:text="${#numbers.formatDecimal(report.totalRevenue, 0, 0)}">0</strong></p>
+
+<h3>Revenue by Method</h3>
+<ul>
+    <li th:each="e : ${report.revenueByMethod}">
+        <span th:text="${e.key}">Method</span>:
+        <strong th:text="${#numbers.formatDecimal(e.value, 0, 0)}">0</strong>
+    </li>
+    <li th:if="${report.revenueByMethod == null or #maps.isEmpty(report.revenueByMethod)}">No data</li>
+</ul>
+
+<h3>Revenue by Status</h3>
+<ul>
+    <li th:each="e : ${report.revenueByStatus}">
+        <span th:text="${e.key}">Status</span>:
+        <strong th:text="${#numbers.formatDecimal(e.value, 0, 0)}">0</strong>
+    </li>
+    <li th:if="${report.revenueByStatus == null or #maps.isEmpty(report.revenueByStatus)}">No data</li>
+</ul>
+
+<h3>Monthly Revenue</h3>
+<ul>
+    <li th:each="e : ${report.monthlyRevenue}">
+        <span th:text="${e.key}">Month</span>:
+        <strong th:text="${#numbers.formatDecimal(e.value, 0, 0)}">0</strong>
+    </li>
+    <li th:if="${report.monthlyRevenue == null or #maps.isEmpty(report.monthlyRevenue)}">No data</li>
+</ul>
+
+<p><a href="/manager/reports">Back to Reports Dashboard</a></p>
+</body>
+</html>
+
+
+
+
+

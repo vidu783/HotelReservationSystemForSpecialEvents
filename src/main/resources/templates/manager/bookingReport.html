@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Report</title>
+</head>
+<body>
+<h2>Booking Report</h2>
+
+<p>Total bookings: <strong th:text="${report.totalBookings}">0</strong></p>
+
+<h3>Bookings by Status</h3>
+<ul>
+    <li th:each="e : ${report.bookingsByStatus}">
+        <span th:text="${e.key}">Status</span>:
+        <strong th:text="${e.value}">0</strong>
+    </li>
+    <li th:if="${report.bookingsByStatus == null or #maps.isEmpty(report.bookingsByStatus)}">No data</li>
+    </ul>
+
+<h3>Bookings by Event Type</h3>
+<ul>
+    <li th:each="e : ${report.bookingsByEventType}">
+        <span th:text="${e.key}">Type</span>:
+        <strong th:text="${e.value}">0</strong>
+    </li>
+    <li th:if="${report.bookingsByEventType == null or #maps.isEmpty(report.bookingsByEventType)}">No data</li>
+</ul>
+
+<h3>Monthly Bookings</h3>
+<ul>
+    <li th:each="e : ${report.monthlyBookings}">
+        <span th:text="${e.key}">Month</span>:
+        <strong th:text="${e.value}">0</strong>
+    </li>
+    <li th:if="${report.monthlyBookings == null or #maps.isEmpty(report.monthlyBookings)}">No data</li>
+</ul>
+
+<p><a href="/manager/reports">Back to Reports Dashboard</a></p>
+</body>
+</html>
+
+
+
+
+
